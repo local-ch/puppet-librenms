@@ -90,8 +90,8 @@ librenms::collector: false
 
 #### Public classes
 
-* [`librenms`]: Installs and configures librenms
-* [`librenms::device`]: Adds the ressource exporter
+* `librenms`: Installs and configures librenms
+* `librenms::device`: Adds the ressource exporter
 
 #### Private classes
 * `add_device`: Collector for the exported ressources
