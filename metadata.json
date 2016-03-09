@@ -1,0 +1,23 @@
+{
+  "name": "darktim-librenms",
+  "version": "0.0.1",
+  "author": "darktim",
+  "license": "GPL-3.0",
+  "summary": "Installs LibreNMS",
+  "source": "https://github.com/darktim/puppet-librenms",
+  "project_page": "https://forge.puppetlabs.com/darktim/puppet-librenms",
+  "issues_url": "https://github.com/darktim/puppet-librenms/issues",
+  "tags": ["monitoring", "librenms", "nms", "debian"],
+  "operatingsystem_support": [
+    {
+    "operatingsystem": "Debian",
+    "operatingsystemrelease": [ "8" ]
+    }
+   ],
+  "dependencies": [
+    { "name": "puppetlabs/stdlib", "version_requirement": ">= 3.2.0 < 5.0.0" },
+    { "name": "puppetlabs/vcsrepo", "version_requirement": ">=  1.3.2" }.
+    { "name": "puppetlabs/mysql", "version_requirement": ">=  3.6.2" }.
+  ],
+  "data_provider": "hiera"
+}
