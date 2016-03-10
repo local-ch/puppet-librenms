@@ -239,7 +239,7 @@ librenms::mysql::mysql_pass: 'SecurePasswordNumber9'
 
 ## Limitations
 
-The module is tested with Debian Jessie. It is not guaranteed that it works with other systems. Please test and send pull requests.
+The module is tested with Debian Wheezy and Debian Jessie. It is not guaranteed that it works with other systems. Please test and send pull requests.
 
 The module depends on the following modules.
 
