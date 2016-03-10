@@ -7,6 +7,7 @@
   * [Beginning with librenms](#beginning-with-librenms)
   3. [Usage - Configuration options and additional functionality](#usage)
   * [Customize configuration](#customize-configuration)
+  * [Webserver Configuration - a proposal](#webserver-configuration)
   4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
   5. [Limitations - OS compatibility, etc.](#limitations)
 
@@ -83,6 +84,87 @@ librenms::configure_mysql: false
 librenms::configure_cron: false
 librenms::collector: false
 ```
+
+### Webserver configuration
+
+This is a complete proposal for a librenms server:
+
+#### Profile
+Your profile can look like this. You still have to care about the firewall and the deployment of the SSL certificate files.
+
+```puppet
+class profile::librenms {
+
+  # make the webserveruser aware to puppet, so that it can be added to the ssl-cert group
+  User<| title == www-data |> {
+    groups  +> ['ssl-cert'],
+    require => Package[ssl-cert]
+  }
+
+  # install some dependency packages (uses puppetlabs/stdlib)
+  ensure_packages(['php5-mysql', 'php5-mcrypt', 'php5-gd', 'php5-snmp', 'php-pear', 'python-mysqldb', 'php-net-ipv4', 'php-net-ipv6', 'rrdtool'])
+
+  # install librenms, config data is taken from hiera
+  include ::librenms
+
+  # install apache, config data is taken from hiera (uses puppetlabs/apache)
+  include ::apache
+
+  # enable apache modules
+  $apache_modules = ['rewrite', 'php5']
+  apache::mod{ $apache_modules: }
+
+  # now fetch the vhost-config via hiera
+  $vhosts = hiera_hash('vhosts')
+  create_resources(apache::vhost, $vhosts)
+
+  # install mysql, config data is taken from from hiera
+  include ::mysql::server
+
+}
+```
+### hiera config
+```hiera
+---
+
+# apache config
+apche::serveradmin: 'admin@example.com'
+apache::default_vhost: false
+apache::mpm_module: 'prefork'
+
+# apache vhosts
+vhosts:
+    'librenms.example.com_80':
+      port: 80
+      servername: 'librenms.example.com'
+      docroot: '/opt/librenms/html'
+      manage_docroot: false
+      redirect_source: '/'
+      redirect_status: 'permanent'
+      redirect_dest: 'https://librenms.example.com/'
+    'librenms.example.com_443':
+      port: '443'
+      servername: 'librenms.example.com'
+      docroot: '/opt/librenms/html'
+      manage_docroot: false
+      ssl: true
+      ssl_cert: '/etc/ssl/certs/star.example.com.crt'
+      ssl_key: '/etc/ssl/private/star.examplee.com.key'
+      ssl_ca: '/etc/ssl/certs/CA_ROOT.example.com.crt'
+      override: 'all'
+      custom_fragment: 'AddType application/x-httpd-php .php'
+
+# mysql server
+mysql::server:root_password: 'SecureMysqlRootpassword'
+mysql::server::override_options:
+  mysqld:
+    innodb_file_per_table: '1'
+
+# librenms DB password
+librenms::mysql::mysql_pass: 'SecurePasswordNumber9'
+
+```
+
 
 ## Reference
 
