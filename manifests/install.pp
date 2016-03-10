@@ -37,6 +37,7 @@ class librenms::install (
             ensure  => directory,
             owner   => $librenms_user,
             group   => 'www-data',
+            mode    => '0775',
             require => Vcsrepo[$install_dir];
         }
 
