@@ -41,7 +41,7 @@ class librenms::params {
 
   # By default, the cron job runs poller-wrapper.py with 16 threads.
   # The current recommendation is to use 4 threads per core as a rule of thumb.
-  $poller_threads = '16'
+  $poller_threads = '12'
 
   # when the poller-wrapper should run
   $cron_poller_wrapper_minute = '*/5'
