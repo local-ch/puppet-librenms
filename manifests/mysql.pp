@@ -34,6 +34,8 @@ class librenms::mysql (
       password => $mysql_pass,
       host     => 'localhost',
       grant    => ['all'],
+      charset  => 'utf8',
+      collate  => 'utf8_general_ci',
       require  => Class['mysql::server'];
   }
 
