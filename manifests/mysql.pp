@@ -35,7 +35,7 @@ class librenms::mysql (
       host     => 'localhost',
       grant    => ['all'],
       charset  => 'utf8',
-      collate  => 'utf8_general_ci',
+      collate  => 'utf8_unicode_ci',
       require  => Class['mysql::server'];
   }
 
